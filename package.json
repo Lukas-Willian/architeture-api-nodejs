@@ -4,7 +4,8 @@
   "description": "The proctum api system",
   "main": "main.js",
   "scripts": {
-    "test": "npm start"
+    "test": "npm start nodemon main.js",
+    "start": "nodemon main.js"
   },
   "author": "",
   "license": "ISC",
