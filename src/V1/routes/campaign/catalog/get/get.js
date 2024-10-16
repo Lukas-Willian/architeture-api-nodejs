@@ -3,26 +3,41 @@ const router = require("express").Router();
 
 //Controllers
 const user_controller = require("../../controllers/getController");
+const getController = require("../../controllers/getController");
 
 //Middleware
 const authenticateJWT = require("../../../../middleware/jwt/jwt");
 const registerRoute = require("../../../../middleware/registerRoute/register_route");
 
 //Routes
-//Find all users
+//Find all campaign
 router.get(
-  "/v1/user",
+  "/v1/campaign",
   registerRoute,
   authenticateJWT,
-  user_controller.all_users
+  getController.all_campaigns
 );
 
-//Find one user by id
+//Find one campaign
 router.get(
-  "/v1/user/:id",
+  "/v1/campaign/:id",
   registerRoute,
   authenticateJWT,
-  user_controller.user
+  getController.campaign
+);
+
+router.get(
+  "/v1/campaign/user/:id",
+  registerRoute,
+  authenticateJWT,
+  getController.campaign_per_user
+);
+
+router.get(
+  "/v1/campaign/costcenter/:id",
+  registerRoute,
+  authenticateJWT,
+  getController.campaign_per_costcenter
 );
 
 module.exports = router;

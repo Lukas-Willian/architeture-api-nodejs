@@ -2,27 +2,34 @@
 const router = require("express").Router();
 
 //Controllers
-const user_controller = require("../../controllers/getController");
+const getController = require("../../controllers/getController");
 
 //Middleware
 const authenticateJWT = require("../../../../middleware/jwt/jwt");
 const registerRoute = require("../../../../middleware/registerRoute/register_route");
 
 //Routes
-//Find all users
+//Find all contacts
 router.get(
-  "/v1/user",
+  "/v1/contact",
   registerRoute,
   authenticateJWT,
-  user_controller.all_users
+  getController.all_contact
 );
 
-//Find one user by id
+//Find one contact
 router.get(
-  "/v1/user/:id",
+  "/v1/contact/:id",
   registerRoute,
   authenticateJWT,
-  user_controller.user
+  getController.contact
+);
+
+router.get(
+  "/v1/contact/user/:id",
+  registerRoute,
+  authenticateJWT,
+  getController.contact_per_user
 );
 
 module.exports = router;
