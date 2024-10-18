@@ -45,6 +45,7 @@ exports.campaign_per_user = asyncHandler(async (req, res) => {
     });
     if (find_campaign.length == 0)
       errorGenerator({ message: "Campaign not found!", status: 404 });
+
     return res.status(200).json({ data: find_campaign });
   } catch (err) {
     console.log(err?.message);
