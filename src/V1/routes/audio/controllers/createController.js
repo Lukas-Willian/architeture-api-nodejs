@@ -11,9 +11,7 @@ const apiWorker = require("../../../service/apiWorker/api_worker");
 
 //Models
 const User = require("../../../models/user/user");
-const Campaign = require("../../../models/campaign/campaign");
-const Costcenter = require("../../../models/cost_center/cost_center");
-const Contact = require("../../../models/contact/contact");
+const Audio = require("../../../models/audio/audio");
 
 //Utils
 const dataValidator = require("../../../utils/data_validator/data_validator");
@@ -21,42 +19,49 @@ const errorGenerator = require("../../../utils/error_generator/error_generator")
 const randomCode = require("../../../utils/random_code/randomCode");
 const contact = require("../../../models/contact/contact");
 
-exports.create_contact = asyncHandler(async (req, res, next) => {
+exports.create_audio = asyncHandler(async (req, res, next) => {
   try {
     //Default variables
     const date = new Date();
     const { id } = req.params;
-
     //Body variables
-    const { name, contact_list } = req.body;
+    const { name, archive_name, description, archive, archive_type, duration } =
+      req.body;
 
-    if (!dataValidator(req.body, ["name", "contact_list"]))
+    if (
+      !dataValidator(req.body, [
+        "name",
+        "archive_name",
+        "description",
+        "archive",
+        "archive_type",
+        "duration",
+      ])
+    )
       throw errorGenerator({ message: "Data not found!", status: 404 });
 
-    const contact_data = new Contact({
+    const audio_data = new Audio({
       basic_information: {
         name: name,
+        archive_name: archive_name,
+        description: description,
         status: true,
       },
       data_information: {
         user_id: id,
-        contact_list: contact_list?.map((res) => {
-          return {
-            id: `${res}-${randomCode(15)}`,
-            to: res,
-            status: "valid",
-          };
-        }),
+        archive_type: archive_type,
+        archive: archive,
+        duration: duration,
       },
       created_date: date,
     });
-    if (!contact_data)
+    if (!audio_data)
       throw errorGenerator({
         message: "Error to generated data!",
         status: 400,
       });
-    const contact_save = await contact_data.save();
-    if (!contact_save)
+    const audio_save = await audio_data.save();
+    if (!audio_save)
       throw errorGenerator({ message: "Error to save data!", status: 400 });
 
     const find_user = await User.findOne({ _id: id }).select(
@@ -68,9 +73,9 @@ exports.create_contact = asyncHandler(async (req, res, next) => {
         $set: {
           data_information: {
             ...find_user.data_information,
-            contact: [
-              ...find_user.data_information.contact,
-              contact_save._id.toString(),
+            audio: [
+              ...find_user.data_information.audio,
+              audio_save._id.toString(),
             ],
           },
         },
@@ -78,7 +83,7 @@ exports.create_contact = asyncHandler(async (req, res, next) => {
     );
     if (!_update_user)
       throw errorGenerator({ message: "Error to update user!", status: 400 });
-    return res.status(200).json({ data: contact_save });
+    return res.status(200).json({ data: audio_save });
   } catch (err) {
     console.log(err?.message);
     return res.status(err.status || 500).json({

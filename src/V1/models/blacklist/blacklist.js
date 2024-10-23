@@ -5,14 +5,14 @@ const bcrypt = require("bcrypt");
 //Default Variables
 const Schema = mongoose.Schema;
 
-const contactSchema = new Schema({
-  basic_information: {
-    name: { type: String, required: true },
-    status: { type: Boolean, required: false },
-  },
+const blackListSchema = new Schema({
   data_information: {
     user_id: { type: String, required: true },
-    contact_list: { type: Array, required: false },
+    number: { type: Number, required: false },
+  },
+  expired_date: {
+    type: Date,
+    required: true,
   },
   created_date: {
     type: Date,
@@ -20,4 +20,4 @@ const contactSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model("Contact", contactSchema);
+module.exports = mongoose.model("Blacklist", blackListSchema);

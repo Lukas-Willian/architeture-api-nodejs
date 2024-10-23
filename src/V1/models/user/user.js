@@ -42,6 +42,9 @@ const userSchema = new Schema({
     cost: { type: [String], required: false },
     campaign: { type: [String], required: false },
     contact: { type: [String], required: false },
+    blacklist: { type: [String], required: false },
+    message: { type: [String], required: false },
+    audio: { type: [String], required: false },
     credits: {
       sms: { type: Number, required: false },
       call: { type: Number, required: false },

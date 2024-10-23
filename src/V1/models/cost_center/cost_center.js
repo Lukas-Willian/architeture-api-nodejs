@@ -12,6 +12,7 @@ const costCenterSchema = new Schema({
   data_information: {
     user_id: { type: String, required: false },
     campaign: { type: [String], required: false },
+    message: { type: [String], required: false },
   },
   created_date: {
     type: Date,
