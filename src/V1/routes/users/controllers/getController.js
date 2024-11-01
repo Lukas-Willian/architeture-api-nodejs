@@ -28,7 +28,9 @@ exports.user = asyncHandler(async (req, res, next) => {
   try {
     const { id } = req.params;
     const find = await User.findOne({ _id: id })
-      .select("_id basic_information created_date last_login")
+      .select(
+        "_id basic_information login_information data_information created_date last_login"
+      )
       .lean();
     if (!find) errorGenerator({ message: "Users not found!", status: 404 });
     return res.status(200).json({ data: find });

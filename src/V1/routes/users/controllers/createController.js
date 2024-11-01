@@ -19,12 +19,10 @@ exports.create_user = asyncHandler(async (req, res, next) => {
     const date = new Date();
 
     //Body Variables
-    const { full_name, user_name, email, password } = req.body;
+    const { user_name, email, password } = req.body;
 
     //Check body info
-    if (
-      !dataValidator(req.body, ["full_name", "user_name", "email", "password"])
-    )
+    if (!dataValidator(req.body, ["user_name", "email", "password"]))
       return errorGenerator({ message: "Data not found!", status: 404 });
 
     //Check exist user
@@ -39,19 +37,25 @@ exports.create_user = asyncHandler(async (req, res, next) => {
 
     const user_data = new User({
       basic_information: {
-        full_name: full_name,
-        type: "PF",
-        adress: {
+        avatar: "",
+        pf: {
+          full_name: "",
+          cpf: 0,
+          rg: 0,
+        },
+        pj: {
+          corporate_reason: "",
+          cnpj: 0,
+          state_registration: 0,
+          contributor_type: "",
+        },
+        address: {
           cep: 0,
           neighborhood: "",
           city: "",
           state: "",
           number: 0,
           complement: "",
-        },
-        company: {
-          cnpj: 0,
-          contributor_type: "",
         },
       },
       login_information: {

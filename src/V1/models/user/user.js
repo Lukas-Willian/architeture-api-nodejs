@@ -7,20 +7,25 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
   basic_information: {
-    full_name: { type: String, required: true },
-    type: { type: String, required: true },
-    cpf: { type: String, required: false },
-    adress: {
+    avatar: { type: String, required: false },
+    pf: {
+      full_name: { type: String, required: false },
+      cpf: { type: Number, required: false },
+      rg: { type: Number, required: false },
+    },
+    pj: {
+      corporate_reason: { type: String, required: false },
+      cnpj: { type: Number, required: false },
+      state_registration: { type: Number, required: false },
+      contributor_type: { type: String, required: false },
+    },
+    address: {
       cep: { type: Number, required: false },
       neighborhood: { type: String, required: false },
       city: { type: String, required: false },
       state: { type: String, required: false },
       number: { type: Number, required: false },
       complement: { type: String, required: false },
-    },
-    company: {
-      cnpj: { type: Number, required: false },
-      contributor_type: { type: String, required: false },
     },
   },
   login_information: {
@@ -49,6 +54,9 @@ const userSchema = new Schema({
       sms: { type: Number, required: false },
       call: { type: Number, required: false },
     },
+  },
+  credit_center: {
+    call: { type: Number, required: false },
   },
   created_date: {
     type: Date,

@@ -1,5 +1,6 @@
 //Defaults imports
 const asyncHandler = require("express-async-handler");
+const fs = require("fs");
 
 //Controllers
 
@@ -10,47 +11,27 @@ const Audio = require("../../../models/audio/audio");
 //Utils
 const errorGenerator = require("../../../utils/error_generator/error_generator");
 
-exports.all_audio = asyncHandler(async (req, res) => {
+exports.get_image = asyncHandler(async (req, res, next) => {
   try {
-    const find_audio = await Audio.find();
-    if (!find_audio)
-      errorGenerator({ message: "Audio not found!", status: 404 });
-    return res.status(200).json({ data: find_audio });
-  } catch (err) {
-    console.log(err?.message);
-    return res.status(err.status || 500).json({
-      message: err.message || "Internal server error!",
-      error: err.status,
-    });
-  }
-});
-exports.audio = asyncHandler(async (req, res) => {
-  try {
-    const find_audio = await Audio.findOne({ _id: req.params.id });
-    if (!find_audio)
-      errorGenerator({ message: "Audio not found!", status: 404 });
-    return res.status(200).json({ data: find_audio });
-  } catch (err) {
-    console.log(err?.message);
-    return res.status(err.status || 500).json({
-      message: err.message || "Internal server error!",
-      error: err.status,
-    });
-  }
-});
-exports.audio_per_user = asyncHandler(async (req, res) => {
-  try {
-    const find_audio = await Audio.find({
-      "data_information.user_id": req.params.id,
-    });
-    if (find_audio.length == 0)
-      errorGenerator({ message: "Audio not found!", status: 404 });
-    return res.status(200).json({ data: find_audio });
-  } catch (err) {
-    console.log(err?.message);
-    return res.status(err.status || 500).json({
-      message: err.message || "Internal server error!",
-      error: err.status,
-    });
+    const folder = req.params.folder;
+    const filename = req.params.filename;
+
+    if (!filename) {
+      return res.json({ message: "File not found", code: 400 });
+    }
+
+    const extension = filename.split(".")[filename.split(".").length - 1];
+
+    if (!["png", "jpg", "jpeg", "webp", "gif"].includes(extension)) {
+      return res.json({ message: "Extension not allowed", code: 400 });
+    }
+
+    const file = fs.readFileSync(`./uploads/${folder}/${filename}`);
+
+    res.writeHead(200, { "Content-Type": "image/jpg" });
+    res.end(file, "binary");
+  } catch (exc) {
+    console.log(exc);
+    res.json({ message: "Internal server error", code: 500 });
   }
 });
